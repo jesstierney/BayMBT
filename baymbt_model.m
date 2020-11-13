@@ -1,4 +1,4 @@
-function baymbt_model(model)
+function baymbt_model(Tmodel,Type)
 % function baymbt_model(model)
 %
 % BAYMBT calibration model for MBT5Me measured in soils and peats.
@@ -6,9 +6,13 @@ function baymbt_model(model)
 % regression.
 %
 % ----- Inputs -----
-% model: A string corresponding the model you want to calculate. Options are:
+% Tmodel: A string corresponding the temperature model you want to calculate. Options are:
 % "T" = Calculate mean annual air temperature (BayMBT)
 % "T0" = Calculate mean annual temperatures above zero (BayMBT0)
+%
+% Type: A string corresponding to the data type. Options are:
+% "soil" = use the soil calibration data
+% "lake" = use the lake calibration data
 %
 % ----- Citation -----
 % This BayMBT calibration method is published here:
@@ -18,31 +22,48 @@ function baymbt_model(model)
 % for branched glycerol dialkyl glycerol tetraethers in soils and peats.
 % Geochimica et Cosmochimica Acta, 268, 142-159.
 
-calibs = readtable('calibration_data.csv');
+if strcmp(Type,"soil")
+    calibs = readtable('soil_calibration_data.csv');
+elseif strcmp(Type,"lake")
+    calibs = readtable('lake_calibration_data.csv');
+else
+    error('Type not recognized - choices are "soil" and "lake"');
+end
+
 
 %% set up for Bayesian regression of form, Y=X*B + e
-if  strcmp(model,"T")
+if  strcmp(Tmodel,"T")
     X = [calibs.MAT ones(size(calibs,1),1)];
-elseif strcmp(model,"T0")
+elseif strcmp(Tmodel,"T0")
     X = [calibs.MAT_0 ones(size(calibs,1),1)];
 else
-        error('Model not recognized - choices are "T" and "T0"');
+    error('TModel not recognized - choices are "T" and "T0"');
 end
 
 Y = calibs.MBT5Me;
 
+if strcmp(Type,"lake")
+    indUse = calibs.Outliers==0;
+    X = X(indUse,:);
+    Y = Y(indUse,:);
+else
+end
+
+
+iObs=size(X,1);
 iR=size(X,2);
 
 %least squares approximation of coefficients B (Bhat)
 Bhat = (X'*X)\(X'*Y);
+tau2hat=1/(iObs-iR)*(Y-X*Bhat)'*(Y-X*Bhat);
 
 %% priors:
 %we use a multivariate normal prior for B
 m_p=Bhat; %prior on the mean, let's use least squares values
 
 %prior covariance matrix
-var_p=.05; %variance, choose a large number
-cov_p=var_p*eye(length(Bhat)); %variance times identity matrix
+var_p=(2.*Bhat).^2; %variance, choose a large number, scale by Bhat
+cov_p=diag(var_p); %variance times identity matrix
 
 %we use an inverse gamma prior for tau^2. For your own applications,
 %you might have to do some experimentation to find good starting values.
@@ -60,7 +81,7 @@ N=length(X);
 
 for i=1:Nc
 %start each chain by setting the initial tau^2 value.
-tau2_val=.05.*rand(1,1);
+tau2_val=tau2hat*10.*rand(1,1);
 
 %now start the draws
 for kk=1:Nd
@@ -144,10 +165,14 @@ tau2_draws_r=reshape(tau2_draws,size(tau2_draws,1)*size(tau2_draws,2),1);
 b_draws_final=b_draws_r(1:4:end,:);
 tau2_draws_final=tau2_draws_r(1:4:end);
 
-if  strcmp(model,"T")
-    filename = 'baymbt_params.mat';
-elseif strcmp(model,"T0")
-    filename = 'baymbt0_params.mat';
+if  strcmp(Tmodel,"T") && strcmp(Type,"soil")
+    filename = 'baymbt_params_soil.mat';
+elseif strcmp(Tmodel,"T0") && strcmp(Type,"soil")
+    filename = 'baymbt0_params_soil.mat';
+elseif strcmp(Tmodel,"T") && strcmp(Type,"lake")
+    filename = 'baymbt_params_lake.mat';
+elseif strcmp(Tmodel,"T0") && strcmp(Type,"lake")
+    filename = 'baymbt0_params_lake.mat';
 else
 end
 

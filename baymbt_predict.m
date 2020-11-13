@@ -1,4 +1,4 @@
-function output = baymbt_predict(mbt5me,prior_mean,prior_std,model)
+function output = baymbt_predict(mbt5me,prior_mean,prior_std,Tmodel,Type)
 % function output = baymbt_predict(mbt5me,prior_mean,prior_std,model)
 %
 % BAYMBT prediction model for MBT5Me measured in soils and peats.
@@ -10,9 +10,13 @@ function output = baymbt_predict(mbt5me,prior_mean,prior_std,model)
 %
 % prior_std: A scalar prior standard deviation value of T in degrees C.
 %
-% model: A string corresponding the model you want to use. Options are:
-% "T" = Calculate mean annual air temperature (BayMBT)
+% Tmodel: A string corresponding the model you want to use. Options are:
+% "T" = Calculate mean annual air temperature (BayMBT, for soils only)
 % "T0" = Calculate mean annual temperatures above zero (BayMBT0)
+%
+% Type: A string corresponding to the data type. Options are:
+% "soil" = use the soil calibration
+% "lake" = use the lake calibration
 %
 % ----- Outputs -----
 %
@@ -20,25 +24,39 @@ function output = baymbt_predict(mbt5me,prior_mean,prior_std,model)
 % output.prior_mean: User choice of prior mean
 % output.prior_std: User choice of prior standard deviation
 % output.T: 2.5%, 50%, and 97.5% confidence intervals of posterior SST
-% output.ens: full ensemble of posterior SST (N x 2000);
+% output.ens: full ensemble of posterior SST (N x 1000);
 %
 % ----- Citation -----
-% Please cite the following paper when using the BayMBT calibrations:
+% Please cite the following papers when using the BayMBT calibrations:
 %
+% For soils:
 % Dearing Crampton-Flood, E., Tierney, J. E., Peterse, F., Kirkels, F. M.,
 % & Sinninghe Damsté, J. S. (2020). BayMBT: A Bayesian calibration model
 % for branched glycerol dialkyl glycerol tetraethers in soils and peats.
 % Geochimica et Cosmochimica Acta, 268, 142-159.
+%
+% For lakes:
+% Martínez-Sosa, P., Tierney, J. E., Stefanescu, I. C., Dearing
+% Crampton-Flood, E., Shuman, B. N., Routson, C. A global Bayesian
+% temperature calibration for lacustrine brGDGTs. EarthArXiV, 
+% doi: 10.31223/X5PS3P
+%
 
     % Ensure column vector.
     mbt5me=mbt5me(:);
     % load appropriate model
-    if  strcmp(model,"T")
-        load('baymbt_params.mat');
-    elseif strcmp(model,"T0")
-        load('baymbt0_params.mat');
+    if strcmp(Type,"lake")
+        load('baymbt0_params_lake.mat','b_draws_final','tau2_draws_final');
+    elseif strcmp(Type,"soil")
+        if  strcmp(Tmodel,"T")
+            load('baymbt_params_soil.mat','b_draws_final','tau2_draws_final');
+        elseif strcmp(Tmodel,"T0")
+            load('baymbt0_params_soil.mat','b_draws_final','tau2_draws_final');
+        else
+        error('TModel not recognized - choices are "T" and "T0"');
+        end
     else
-        error('Model not recognized - choices are "T" and "T0"');
+        error('Type not recognized - choices are "soil" and "lake"');
     end
     % get dimensions of time series and draws
     nd = length(mbt5me);
@@ -61,7 +79,7 @@ function output = baymbt_predict(mbt5me,prior_mean,prior_std,model)
     output.ens = post_mean + randn(nd,n_draws).*post_sig;
     output.prior_mean = prior_mean;
     output.prior_std = prior_std;
-    if strcmp(model,"T0")
+    if strcmp(Tmodel,"T0")
     % if using BayMBT0, truncate at T < 0
     output.ens(output.ens < 0) = NaN;
     else
