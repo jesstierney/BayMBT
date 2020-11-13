@@ -9,7 +9,7 @@ Geochimica et Cosmochimica Acta, 268, 142-159.
 
 And the following publication when using BayMBT for lakes:
 
-Martínez-Sosa, P., Tierney, J. E., Stefanescu, I. C., Dearing Crampton-Flood, E., Shuman, B. N., Routson, C. A global Bayesian temperature calibration for lacustrine brGDGTs. EarthArXiV doi: 10.31223/X5PS3P
+Martínez-Sosa, P., Tierney, J. E., Stefanescu, I. C., Dearing Crampton-Flood, E., Shuman, B. N., Routson, C. A global Bayesian temperature calibration for lacustrine brGDGTs. EarthArXiV \<https://doi.org/10.31223/X5PS3P\>
 
 ## Description of contents
 
@@ -23,4 +23,4 @@ Martínez-Sosa, P., Tierney, J. E., Stefanescu, I. C., Dearing Crampton-Flood, E
 
 To cite the code repository directly use:
 
-*Tierney, Jessica E., 2019. BayMBT. \<https://github.com/jesstierney/BayMBT \>.*
+*Tierney, Jessica E., 2019. BayMBT. \<https://github.com/jesstierney/BayMBT\>.*
