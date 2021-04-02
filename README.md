@@ -5,7 +5,7 @@ BayMBT is a Bayesian calibration for the branched GDGT MBT5Me proxy in soils, pe
 Dearing Crampton-Flood, E., Tierney, J. E., Peterse, F., Kirkels, F. M.,
 & Sinninghe Damsté, J. S. (2020). BayMBT: A Bayesian calibration model
 for branched glycerol dialkyl glycerol tetraethers in soils and peats.
-Geochimica et Cosmochimica Acta, 268, 142-159.
+Geochimica et Cosmochimica Acta, 268, 142-159. <https://doi.org/10.1016/j.gca.2019.09.043>
 
 And the following publication when using BayMBT for lakes:
 
@@ -19,8 +19,10 @@ Martínez-Sosa, P., Tierney, J. E., Stefanescu, I. C., Dearing Crampton-Flood, E
 
 **baymbt_predict.m** This calculates temperatures from user-provided MBT5Me values, using the parameters in the params.mat files, through Bayesian inference. It requires a prior mean and standard deviation on temperature. For soils, one can use either the "BayMBT" model (which is calibrated to mean annual temperatures) or the "BayMBT0" model (which is calibrated to mean annual temperatures above 0C). For lakes the default is the "BayMBT0" model. For both soils and lakes, we recommend using BayMBT0 for most applications, as it is a better fit to the core top data. The implicit assumption in BayMBT0 is that brGDGTs are not synthesized at temperatures below freezing.
 
-**baymbt_example.m** This is an example of how to use **baymbt_predict.m**. It loads fractional GDGT abundance data from Hank_core.txt, calculates MBT5Me, and calibrates it to temperature. These data are shown in Figure 9 of Dearing Crampton-Flood et al., (2020).
+**baymbt_example_soils.m** This is an example of how to use **baymbt_predict.m** to predict temperatures from soil brGDGT data. It loads fractional GDGT abundance data from the Dearing Crampton-Flood et al. Hank Core study (Hank_core.txt) <https://doi.org/10.1016/j.epsl.2018.03.030>, calculates MBT5Me, and calibrates it to temperature. These data are shown in Figure 9 of Dearing Crampton-Flood et al., (2020).
+
+**baymbt_example_lakes.m** This is an example of how to use **baymbt_predict.m** to predict temperatures from lake brGDGT data. It loads data from the Miller et al. Basin Pond study (BasinPondMiller.csv) <https://doi.org/10.5194/cp-14-1653-2018> and calibrates MBT5Me to temperature. These data are shown in Figure 9 of Martínez-Sosa et al., (2021).
 
 To cite the code repository directly use:
 
-*Tierney, Jessica E., 2019. BayMBT. <https://github.com/jesstierney/BayMBT>.*
+*Tierney, Jessica E., 2021. BayMBT. <https://github.com/jesstierney/BayMBT>.*
