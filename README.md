@@ -1,6 +1,6 @@
 # BayMBT
 
-BayMBT is a Bayesian calibration for the branched GDGT MBT5Me proxy in soils, peats, and lakes. In this package you'll find the calibration data, the code to construct the calibration, code to forward model MBT5Me from temperatures, and code to predict temperatures from MBT5Me. Please cite the following publication when using BayMBT for soils and lakes:
+BayMBT is a Bayesian calibration for the branched GDGT MBT5Me proxy in soils, peats, and lakes. In this package you'll find the calibration data, the code to construct the calibration, code to forward model MBT5Me from temperatures, and code to predict temperatures from MBT5Me. Please cite the following publication when using BayMBT for soils and peats:
 
 Dearing Crampton-Flood, E., Tierney, J. E., Peterse, F., Kirkels, F. M.,
 & Sinninghe Damsté, J. S. (2020). BayMBT: A Bayesian calibration model
@@ -9,7 +9,7 @@ Geochimica et Cosmochimica Acta, 268, 142-159. <https://doi.org/10.1016/j.gca.20
 
 And the following publication when using BayMBT for lakes:
 
-Martínez-Sosa, P., Tierney, J. E., Stefanescu, I. C., Dearing Crampton-Flood, E., Shuman, B. N., Routson, C. A global Bayesian temperature calibration for lacustrine brGDGTs. EarthArXiV <https://doi.org/10.31223/X5PS3P>
+Martínez-Sosa, P., Tierney, J. E., Stefanescu, I. C., Dearing Crampton-Flood, E., Shuman, B. N., Routson, C. A global Bayesian temperature calibration for lacustrine brGDGTs. Geochimica et Cosmochimica Acta <https://doi.org/10.1016/j.gca.2021.04.038>
 
 ## Description of contents
 
