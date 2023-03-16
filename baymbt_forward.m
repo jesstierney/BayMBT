@@ -1,5 +1,5 @@
-function mbt5me = baymbt_forward(t,Tmodel,Type)
-% function output = baymbt_forward(t,model)
+function mbt5me = baymbt_forward(t,Type,Tmodel)
+% function output = baymbt_forward(t,Type,Tmodel)
 %
 % BAYMBT forward model for MBT5Me measured in soils and peats.
 % Predicts MBT5Me based on mean annual air temperature or mean temperatures
@@ -7,13 +7,15 @@ function mbt5me = baymbt_forward(t,Tmodel,Type)
 % ----- Inputs -----
 % t: A scalar or vector of temperature values (1 x N) or (N x 1)
 %
-% Tmodel: A string corresponding the model you want to use. Options are:
-% "T" = assumes mean annual air temperature (BayMBT)
-% "T0" = assumes mean annual temperatures above zero (BayMBT0)
-%
 % Type: A string corresponding to the data type. Options are:
 % "soil" = use the soil calibration
 % "lake" = use the lake calibration
+%
+% Tmodel: A string corresponding the model you want to use. Options are:
+% "T0" = (default) Calculate mean annual temperatures above zero (BayMBT0,
+% only option for lakes) 
+% "T" = Calculate mean annual air temperature (BayMBT, for soils only)
+%
 %
 % ----- Outputs -----
 %
@@ -26,17 +28,27 @@ function mbt5me = baymbt_forward(t,Tmodel,Type)
 % Dearing Crampton-Flood, E., Tierney, J. E., Peterse, F., Kirkels, F. M.,
 % & Sinninghe Damsté, J. S. (2020). BayMBT: A Bayesian calibration model
 % for branched glycerol dialkyl glycerol tetraethers in soils and peats.
-% Geochimica et Cosmochimica Acta, 268, 142-159.
+% Geochimica et Cosmochimica Acta, 268, 142-159. https://doi.org/10.1016/j.gca.2019.09.043
 %
 % For lakes:
 % Martínez-Sosa, P., Tierney, J. E., Stefanescu, I. C., Dearing
-% Crampton-Flood, E., Shuman, B. N., Routson, C. A global Bayesian
-% temperature calibration for lacustrine brGDGTs. EarthArXiV, 
-% doi: 10.31223/X5PS3P
+% Crampton-Flood, E., Shuman, B. N., Routson, C. (2021) A global Bayesian
+% temperature calibration for lacustrine brGDGTs. Geochimica et
+% Cosmochimica Acta, 305, 87-10. https://doi.org/10.1016/j.gca.2021.04.038
 %
 
 % Ensure column vector
     t=t(:);
+    % assign Tmodel if not given
+    if ~exist('Tmodel','var')
+        Tmodel = "T0";
+    else
+    end
+    % check if lake is used w/ T
+    if strcmp(Type,"lake") && strcmp(Tmodel,"T")
+        error('Model T is not supported for lakes. Use T0 instead')
+    else
+    end
     % load appropriate model
     if strcmp(Type,"lake")
         load('baymbt0_params_lake.mat','b_draws_final','tau2_draws_final');
