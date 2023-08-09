@@ -23,7 +23,7 @@ prior_std = 10;
 model = "T0";
 
 % calibrate both uncorrected mbt and corrected mbt:
-calibratedData = baymbt_predict(mbt5me,prior_mean,prior_std,model,"lake");
+calibratedData = baymbt_predict(mbt5me,prior_mean,prior_std,"lake",model);
 
 % plot the median values and 1-sigma confidence intervals
 figure(1); clf;

@@ -36,8 +36,8 @@ prior_std = 15;
 model = "T0";
 
 % calibrate both uncorrected mbt and corrected mbt:
-uncorrected = baymbt_predict(mbt5me,prior_mean,prior_std,model,"soil");
-corrected = baymbt_predict(mbtterr,prior_mean,prior_std,model,"soil");
+uncorrected = baymbt_predict(mbt5me,prior_mean,prior_std,"soil",model);
+corrected = baymbt_predict(mbtterr,prior_mean,prior_std,"soil",model);
 
 % plot the median values
 figure(1); clf;
